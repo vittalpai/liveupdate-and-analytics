@@ -121,8 +121,9 @@ alt="Gradual Feature Rollout with IBM MobileFirst Foundation 8.0" width="240" he
 
 ### Using Bluemix Mobile Analytics
 
-  * Open your Mobile Analytics service dashboard, Expand View Credentials to reveal your API Key value. Add API Key in the following code of `AppDelegate.swift` 
-  ```swift
+  * Open your Mobile Analytics service dashboard, Expand View Credentials to reveal your API Key value. Add API Key in the following code of `AppDelegate.swift`.
+  
+  ```
   Analytics.initialize(appName: "Coupons_Application", apiKey: "Your-Mobile-Analytics-Service-Key", hasUserContext: true, collectLocation: true, deviceEvents: .lifecycle, .network)
   ```
   * After using the app for a while you go to the [Bluemix Mobile Analytics Console](https://console.ng.bluemix.net/catalog/services/mobile-analytics/) & You can see chart's built using Analytics data.
