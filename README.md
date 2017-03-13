@@ -2,8 +2,6 @@
 
 The purpose of this sample is to show you how to gradually rollout a new feature, and measure its success, using MobileFirst Foundation capabilities. It also shows you how you can fine-tune aspects of the new feature in response to user feedback, without releasing a new version of your app. The new feature introduced in this sample app allows users to collect [Augmented Reality](https://www.wikiwand.com/en/Augmented_reality) coupons, using the phone camera to scan for coupons “in the field.” Similar to collecting Pokemon in the recent popular game [Pokemon Go](http://www.pokemongo.com/).
 
-For more info see the following [blog](https://mobilefirstplatform.ibmcloud.com/blog/2016/09/11/liveupdate-and-analytics/).
-
  The MobileFirst Foundation features highlighted in this sample are [Live Update](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/using-the-mfpf-sdk/live-update/), [Analytics](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/analytics/), [Adapters](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/adapters/) and [Security Framework](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/authentication-and-security/).
 
 ### Demo
@@ -14,10 +12,11 @@ alt="Gradual Feature Rollout with IBM MobileFirst Foundation 8.0" width="240" he
 
 ### Prerequisites
 1. [Installed Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-2. Pre-installed IBM MobileFirst Platform [development environment](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/setting-up-your-development-environment/).
-3. Understanding the IBM MobileFirst Platform [Authentication and Security](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/authentication-and-security/).
-4. Understanding the IBM MobileFirst Platform [Java Adapters](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/adapters/java-adapters/).
-5. Understanding the IBM MobileFirst Platform [Live Update](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/using-the-mfpf-sdk/live-update/).
+2. [Mobilefirst Foundation Service Instance](https://console.ng.bluemix.net/catalog/services/mobile-foundation/) on Bluemix.
+3. [Mobile Analytics Instance](https://console.ng.bluemix.net/catalog/services/mobile-analytics/) on Bluemix.
+4. Understanding the IBM MobileFirst Platform [Authentication and Security](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/authentication-and-security/).
+5. Understanding the IBM MobileFirst Platform [Java Adapters](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/adapters/java-adapters/).
+6. Understanding the IBM MobileFirst Platform [Live Update](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/using-the-mfpf-sdk/live-update/).
 
 ### Running the sample
 
@@ -119,8 +118,9 @@ alt="Gradual Feature Rollout with IBM MobileFirst Foundation 8.0" width="240" he
 
 ### Using Analytics
 
-  * After using the app for a while you go to the [MobileFirst Analytics Console](http://localhost:9080/analytics/console/dashboard) and build your custom charts like below:
-  ![Scope Mapping](./images/analytics.png)
+  * After using the app for a while you go to the [Bluemix Mobile Analytics Console](https://console.ng.bluemix.net/catalog/services/mobile-analytics/) & You can see chart's built using Analytics data.
+  * You can also build your own custom charts using Analytics data on [Bluemix dashDB for Analytics Service](https://console.ng.bluemix.net/catalog/services/dashdb) like below:
+  ![Analytics](./images/analytics.png)
 
 ### Architecture
 ![Architecture](./images/architecture.png)
@@ -135,7 +135,7 @@ alt="Gradual Feature Rollout with IBM MobileFirst Foundation 8.0" width="240" he
 IBM MobileFirst Foundation 8.0
 
 ### License
-Copyright 2016 IBM Corp.
+Copyright 2017 IBM Corp.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
