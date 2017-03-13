@@ -1,8 +1,8 @@
-# Coupons App
+# AR Coupons App
 
 The purpose of this sample is to show you how to gradually rollout a new feature, and measure its success, using MobileFirst Foundation capabilities. It also shows you how you can fine-tune aspects of the new feature in response to user feedback, without releasing a new version of your app. The new feature introduced in this sample app allows users to collect [Augmented Reality](https://www.wikiwand.com/en/Augmented_reality) coupons, using the phone camera to scan for coupons “in the field.” Similar to collecting Pokemon in the recent popular game [Pokemon Go](http://www.pokemongo.com/).
 
- The MobileFirst Foundation features highlighted in this sample are [Live Update](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/using-the-mfpf-sdk/live-update/), [Analytics](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/analytics/), [Adapters](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/adapters/) and [Security Framework](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/authentication-and-security/).
+ The MobileFirst Foundation Service features highlighted in this sample are [Live Update](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/using-the-mfpf-sdk/live-update/), [Adapters](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/adapters/), [Security Framework](https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/authentication-and-security/) and also [Bluemix Mobile Analytics](https://console.ng.bluemix.net/docs/services/mobileanalytics/index.html#getting-started-with-mobile-analytics) feature,
 
 ### Demo
 
@@ -48,14 +48,16 @@ alt="Gradual Feature Rollout with IBM MobileFirst Foundation 8.0" width="240" he
 
 - Configure the `Live Update Settings`
   - Set the resolver adapter name:
-    * From the [MobileFirst Operations console](http://localhost:9080/mfpconsole) go to **Adapters->Live Update Adapter** and set the **segmentResolverAdapterName** to be `ClubMemberTypeSegmentResolver`
+    * From the [MobileFirst Operations console](http://localhost:443/mfpconsole) go to **Adapters->Live Update Adapter** and set the **segmentResolverAdapterName** to be `ClubMemberTypeSegmentResolver`
   - Import the Live Update schema:
     * The scheme to import is located in the file **schema.txt**
     * Import the schema by executing the following curl command:
 
       ```bash
-      curl -X PUT -d @schema.txt --user admin:admin -H "Content-Type:application/json" http://localhost:9080/mfpadmin/management-apis/2.0/runtimes/mfp/admin-plugins/liveUpdateAdapter/com.github.mfpdev.sample.CouponsApp/schema
+      curl -X PUT -d @schema.txt --user admin:admin -H "Content-Type:application/json" http://localhost:443/mfpadmin/management-apis/2.0/runtimes/mfp/admin-plugins/liveUpdateAdapter/com.github.mfpdev.sample.CouponsApp/schema
       ```
+>Note: Replace localhost with your Bluemix Mobile Foundation Service url.
+
   - Import the Live Update segments:
     * The segments to import are located in the file **segments.txt**
     * Import the segments by executing the following script (save the script to file first):
@@ -67,10 +69,11 @@ alt="Gradual Feature Rollout with IBM MobileFirst Foundation 8.0" width="240" he
       while [ $segments_number -gt $counter ]
       do
           segment=$(cat segments.txt | python -c 'import json,sys;obj=json.load(sys.stdin);data_str=json.dumps(obj["items"]['$counter']);print data_str;')
-          echo $segment | curl -X POST -d @- --user admin:admin --header "Content-Type:application/json" http://localhost:9080/mfpadmin/management-apis/2.0/runtimes/mfp/admin-plugins/liveUpdateAdapter/com.github.mfpdev.sample.CouponsApp/segment
+          echo $segment | curl -X POST -d @- --user admin:admin --header "Content-Type:application/json" http://localhost:443/mfpadmin/management-apis/2.0/runtimes/mfp/admin-plugins/liveUpdateAdapter/com.github.mfpdev.sample.CouponsApp/segment
           ((counter++))
       done
       ```
+>Note: Replace localhost with your Bluemix Mobile Foundation Service url.
 >Note: if you are using windows you need to have a bash environment installed.
 
 - Security configuration
@@ -116,8 +119,12 @@ alt="Gradual Feature Rollout with IBM MobileFirst Foundation 8.0" width="240" he
 
   * In [MobileFirst Operations console](http://localhost:9080/mfpconsole) you can go to `Live Update Settings` under **Applications->CouponsApp->Live Update Settings** and change features and properties to see how they affect the app.  e.g.: change the discountPickableRadius and reload the coupons to see how it affect the distance of coupons which can be picked.
 
-### Using Analytics
+### Using Bluemix Mobile Analytics
 
+  * Open your Mobile Analytics service dashboard, Expand View Credentials to reveal your API Key value. Add API Key in the following code of `AppDelegate.swift` 
+  ```swift
+  Analytics.initialize(appName: "Coupons_Application", apiKey: "Your-Mobile-Analytics-Service-Key", hasUserContext: true, collectLocation: true, deviceEvents: .lifecycle, .network)
+  ```
   * After using the app for a while you go to the [Bluemix Mobile Analytics Console](https://console.ng.bluemix.net/catalog/services/mobile-analytics/) & You can see chart's built using Analytics data.
   * You can also build your own custom charts using Analytics data on [Bluemix dashDB for Analytics Service](https://console.ng.bluemix.net/catalog/services/dashdb) like below:
   ![Analytics](./images/analytics.png)

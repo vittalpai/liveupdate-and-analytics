@@ -35,8 +35,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         _ = UserLoginChallengeHandler()
         BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
-        // Add Bluemix Mobile Analytics Key here
-        Analytics.initialize(appName: "Coupons_Application", apiKey: "f0d05d72-4bd5-4870-9699-99c2a561779c", hasUserContext: true, collectLocation: true, deviceEvents: .lifecycle, .network)
+        // Add Bluemix Mobile Analytics Key below
+        Analytics.initialize(appName: "Coupons_Application", apiKey: "Your-Mobile-Analytics-Service-Key", hasUserContext: true, collectLocation: true, deviceEvents: .lifecycle, .network)
         Analytics.isEnabled = true
         Logger.isLogStorageEnabled = true
         Logger.isInternalDebugLoggingEnabled = true
