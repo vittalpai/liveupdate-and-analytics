@@ -73,8 +73,7 @@ alt="Gradual Feature Rollout with IBM MobileFirst Foundation 8.0" width="240" he
           ((counter++))
       done
       ```
->Note: Replace localhost with your Bluemix Mobile Foundation Service url.
->Note: if you are using windows you need to have a bash environment installed.
+>Note: Replace localhost with your Bluemix Mobile Foundation Service url and if you are using windows you need to have a bash environment installed.
 
 - Security configuration
   * From [MobileFirst Operations console](http://localhost:9080/mfpconsole) go to **Applications->CouponsApp->iOS->Security(Tab)**. In `Scope-Elements Mapping` map scope `configuration-user-login` to UserLogin.  Do the same for scope `club-member-scope`.  
