@@ -27,27 +27,62 @@ import HDAugmentedReality
 import IBMMobileFirstPlatformFoundationLiveUpdate
 import IBMMobileFirstPlatformFoundation
 import SwiftyJSON
+import BMSAnalytics
+import BMSCore
 
-class WelcomeViewController: UIViewController, ARDataSource{
+class WelcomeViewController: UIViewController, ARDataSource, CLLocationManagerDelegate{
     
     @IBOutlet weak var welcomeTitle: UILabel!
     @IBOutlet weak var welcomeImage: UIImageView!
     @IBOutlet weak var clubImage: UIImageView!
     @IBOutlet weak var lookForCouponsFeature: UIButton!
+    @IBOutlet weak var Redeem: UIButton!
     
+    let locationManager: CLLocationManager = CLLocationManager()
+    let authorizationStatus = CLLocationManager.authorizationStatus()
     var discountPickableRadius : Int?
+    @IBOutlet weak var AmountLabel: UILabel!
     var couponsAnnotations : [CouponARAnnotation]? = []
     var giftPickableRadius : Int?
 
     override func viewWillAppear(animated: Bool) {
         self.navigationController!.navigationBar.hidden = true;
+        locationManager.requestWhenInUseAuthorization()
+        Analytics.logLocation();
+        Analytics.send();
         loadWelcomeSettings()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+       locationManager.delegate = self
+        if(authorizationStatus == .Denied)
+        {
+            print("DENIED")
+            locationManager.requestWhenInUseAuthorization()
+            Analytics.logLocation();
+            Analytics.send();
+        }
     }
     
+    @IBAction func Logout(sender: UIButton) {
+        WLAuthorizationManager.sharedInstance().logout("UserLogin") { (error) in
+            if (error != nil) {
+                print (error)
+            }
+            else {
+                WLAuthorizationManager.sharedInstance().obtainAccessTokenForScope("club-member-scope") { (token, error) in
+                    if (token != nil) {
+                        print (token.value)
+                        self.loadWelcomeSettings ()
+                    } else {
+                        print (error)
+                    }
+                }
+            }
+        }
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -65,17 +100,21 @@ class WelcomeViewController: UIViewController, ARDataSource{
     }
     
     private func loadWelcomeSettings () {
-        LiveUpdateManager.sharedInstance.obtainConfiguration([:]) { (configuration, error) in
+        LiveUpdateManager.sharedInstance.obtainConfiguration([:], useCache: false) { (configuration, error) in
             if let couponeIsEnable = configuration?.isFeatureEnabled("ar_coupon") {
                 self.lookForCouponsFeature.hidden = !couponeIsEnable
+                self.Redeem.hidden = !couponeIsEnable
+                self.AmountLabel.hidden = !couponeIsEnable
                 self.welcomeTitle.text = "Welcome " + NSUserDefaults.standardUserDefaults().stringForKey("displayName")!
                 if let clubImage = configuration?.getProperty("clubImage") {
                     self.clubImage.image = Utils.getUIImage(clubImage)!
                 }
                 if (couponeIsEnable) {
                     if let welcomeMessage = configuration?.getProperty("welcomeMessage") {
-                        self.welcomeTitle.text = self.welcomeTitle.text! + ", \n" + welcomeMessage
+                        self.welcomeTitle.text = self.welcomeTitle.text! + ", " + welcomeMessage
                     }
+                    self.AmountLabel.text = "Total Coupons Value : " + NSUserDefaults.standardUserDefaults().stringForKey("couponvalue")! + "$";
+                    
                     self.welcomeImage.image = UIImage(named:"store_5.png")
                     self.startCouponsAnimation()
                 } else {
@@ -111,7 +150,8 @@ class WelcomeViewController: UIViewController, ARDataSource{
     
     
     @IBAction func browseProducts(sender: AnyObject) {
-        //Dummy action, only fetch token
+        //Dummy action, only fetch oken
+        //fatalError()
         WLAuthorizationManager.sharedInstance().obtainAccessTokenForScope("club-member-scope") { (token, error) in
             if (token != nil) {
                 print (token.value)
@@ -123,15 +163,15 @@ class WelcomeViewController: UIViewController, ARDataSource{
     }
     
     @IBAction func getMyCoupons(sender: AnyObject) {
-        LiveUpdateManager.sharedInstance.obtainConfiguration([:]) { (configuration, error) in
+        LiveUpdateManager.sharedInstance.obtainConfiguration([:], useCache: false) { (configuration, error) in
             if let coupons_adapter_url = configuration?.getProperty("coupons_adapter_url"), let discountPickableRadius = configuration?.getProperty("discountPickableRadius"), let giftPickableRadius = configuration?.getProperty("giftPickableRadius") {
                 self.discountPickableRadius = Int(discountPickableRadius)
                 self.giftPickableRadius = Int(giftPickableRadius)
                 self.ferchCoupons(coupons_adapter_url)
                 
                 let segment = coupons_adapter_url.componentsSeparatedByString("/").last
-                WLAnalytics.sharedInstance().log("load-coupons-pressed", withMetadata: ["load-coupons-pressed" : segment!]);
-                WLAnalytics.sharedInstance().send();
+                Analytics.log(metadata: ["load-coupons-pressed" : segment!]);
+                Analytics.send();
             }
         }
     }

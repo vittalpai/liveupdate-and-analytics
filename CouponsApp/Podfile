@@ -7,4 +7,5 @@ target 'CouponsApp' do
    pod 'IBMMobileFirstPlatformFoundationLiveUpdate'
    pod 'SwiftyJSON'
    pod 'HDAugmentedReality', :git => 'https://github.com/DanijelHuis/HDAugmentedReality.git'
+   pod 'BMSAnalytics'
 end

@@ -25,11 +25,15 @@ import UIKit
 import HDAugmentedReality
 import IBMMobileFirstPlatformFoundation
 import AudioToolbox.AudioServices
+import BMSCore
+import BMSAnalytics
 
 public class CouponAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
 {
     var couponImageView : UIImageView?
     public var titleLabel: UILabel?
+    
+    
     
     override public func didMoveToSuperview() {
         super.didMoveToSuperview()
@@ -92,20 +96,28 @@ public class CouponAnnotationView: ARAnnotationView, UIGestureRecognizerDelegate
     
     public func couponTapped() {
         if let annotation = self.annotation as? CouponARAnnotation  {
-            
             if annotation.distanceFromUser > Double(annotation.enabledRadius!) {
                 let alertView = UIAlertView(title: annotation.title, message: "Coupon is too far, you need to get closer", delegate: nil, cancelButtonTitle: "OK")
+                
                 AudioServicesPlaySystemSound(1306)
                  (self.annotation as! CouponARAnnotation).isPicked = false
                 alertView.show()
             } else if !annotation.isPicked{
+                let intString = annotation.title!.componentsSeparatedByCharactersInSet(
+                    NSCharacterSet
+                        .decimalDigitCharacterSet()
+                        .invertedSet)
+                    .joinWithSeparator("");
+                let totalvalue = Int(NSUserDefaults.standardUserDefaults().stringForKey("couponvalue")!)! + Int(intString)!;
+                
+                NSUserDefaults.standardUserDefaults().setObject(totalvalue,forKey: "couponvalue");
                 AudioServicesPlaySystemSound(1109)
                 (self.annotation as! CouponARAnnotation).imageURL = "check.png"
                 (self.annotation as! CouponARAnnotation).isPicked = true
                 loadUi()
             }
-            WLAnalytics.sharedInstance().log("picked-coupon", withMetadata: annotation.asMetaData());
-            WLAnalytics.sharedInstance().send();
+           Analytics.log(metadata: ["picked-coupon" : annotation.asMetaData()]);
+           Analytics.send();
         }
     }
 }

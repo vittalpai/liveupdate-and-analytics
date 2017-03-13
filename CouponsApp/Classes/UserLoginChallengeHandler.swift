@@ -24,6 +24,8 @@
 import IBMMobileFirstPlatformFoundation
 import AudioToolbox.AudioServices
 import UIKit
+import BMSCore
+import BMSAnalytics
 
 
 public class UserLoginChallengeHandler : SecurityCheckChallengeHandler {
@@ -44,9 +46,11 @@ public class UserLoginChallengeHandler : SecurityCheckChallengeHandler {
     
     public override func handleSuccess(success: [NSObject : AnyObject]!) {
         NSUserDefaults.standardUserDefaults().setObject(success["user"]!["displayName"]!!, forKey: "displayName")
+        NSUserDefaults.standardUserDefaults().setObject(0,forKey: "couponvalue");
+        Analytics.userIdentity = success["user"]!["displayName"]!! as! String;
+        Analytics.send();
         NSUserDefaults.standardUserDefaults().synchronize()
-        closeLoginScreen()
-        
+        closeLoginScreen();
     }
     
     public override func handleFailure(failure: [NSObject : AnyObject]!) {
